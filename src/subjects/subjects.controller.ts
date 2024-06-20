@@ -1,12 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SubjectsService } from './subjects.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { FindOneParams } from 'src/common/pipes/validation.pipe';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { Subject } from './entities/subject.entity';
+import { SubjectsService } from './subjects.service';
 
 @Controller('subjects')
 export class SubjectsController {
-  constructor(private readonly subjectsService: SubjectsService) {}
+  constructor(private readonly subjectsService: SubjectsService) { }
 
   @Post()
   create(@Body() createSubjectDto: CreateSubjectDto) {
@@ -14,22 +15,22 @@ export class SubjectsController {
   }
 
   @Get()
-  findAll() : Promise<Subject[]> {
+  findAll(): Promise<Subject[]> {
     return this.subjectsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.subjectsService.findOne(+id);
+  findOne(@Param() params: FindOneParams) {
+    return this.subjectsService.findOne(params.id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
-    return this.subjectsService.update(+id, updateSubjectDto);
+  update(@Param() params: FindOneParams, @Body() updateSubjectDto: UpdateSubjectDto) {
+    return this.subjectsService.update(params.id, updateSubjectDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.subjectsService.remove(+id);
+  remove(@Param() params: FindOneParams) {
+    return this.subjectsService.remove(params.id);
   }
 }

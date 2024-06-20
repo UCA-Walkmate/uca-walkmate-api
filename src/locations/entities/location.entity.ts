@@ -1,6 +1,6 @@
 import { Point } from "geojson";
 import { Category } from "src/categories/entities/category.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('locations')
 export class Location {

@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { LocationsService } from './locations.service';
-import { CreateLocationDto } from './dto/create-location.dto';
-import { UpdateLocationDto } from './dto/update-location.dto';
+import { Controller, Get, Param } from '@nestjs/common';
 import { Location } from './entities/location.entity';
+import { LocationsService } from './locations.service';
+import { FindOneParams } from 'src/common/pipes/validation.pipe';
 
 @Controller('locations')
 export class LocationsController {
@@ -14,8 +13,8 @@ export class LocationsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Location> {
-    return this.locationsService.findOne(+id);
+  findOne(@Param() params: FindOneParams): Promise<Location> {
+    return this.locationsService.findOne(params.id);
   }
 
 }
