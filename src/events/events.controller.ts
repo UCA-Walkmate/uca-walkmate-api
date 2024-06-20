@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Event } from './entities/event.entity';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(private readonly eventsService: EventsService) { }
 
   @Post()
   create(@Body() createEventDto: CreateEventDto) {
@@ -13,12 +14,12 @@ export class EventsController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<Event[]> {
     return this.eventsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<Event> {
     return this.eventsService.findOne(+id);
   }
 
