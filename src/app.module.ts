@@ -1,5 +1,8 @@
+// ** NestJS Imports
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+
+// ** Module Imports
 import { DatabaseModule } from './database/database.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { LocationsModule } from './locations/locations.module';
@@ -21,7 +24,7 @@ import { EventsModule } from './events/events.module';
     RolesModule,
     CategoriesModule,
     BuildingsModule,
-    EventsModule,    
+    EventsModule,
   ],
   controllers: [],
   providers: [],
