@@ -2,10 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { Role } from './entities/role.entity';
 
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+  constructor(private readonly rolesService: RolesService) { }
 
   @Post()
   create(@Body() createRoleDto: CreateRoleDto) {
@@ -13,12 +14,12 @@ export class RolesController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<Role[]> {
     return this.rolesService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<Role> {
     return this.rolesService.findOne(+id);
   }
 
