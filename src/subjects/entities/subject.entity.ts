@@ -13,6 +13,7 @@ export class Subject {
     userId: number;
 
     @Column({name: 'location_id'})
+    // TODO: FK
     locationId: number;
 
 }
