@@ -43,17 +43,10 @@ export class CategoriesService {
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    this.logger.debug({
-      id: +id,
-      ...updateCategoryDto
-    });
-
     const category = await this.categoryRepository.preload({
       id: +id,
       ...updateCategoryDto
     });
-
-    this.logger.debug(category);
 
     if (!category)
       throw new NotFoundException(`Category with id ${id} not found`);
