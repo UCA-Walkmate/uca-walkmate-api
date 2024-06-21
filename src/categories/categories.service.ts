@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -7,28 +7,77 @@ import { Category } from './entities/category.entity';
 
 @Injectable()
 export class CategoriesService {
+  private readonly logger = new Logger('CategoriesService');
+
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
   ) { }
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+    const name = createCategoryDto.name;
+    const exists = await this.categoryRepository.findOne({ where: { name } });
+
+    if (exists)
+      throw new ConflictException(`Category with name ${name} already exists`);
+
+    try {
+      const newCategory = this.categoryRepository.create({ name });
+      await this.categoryRepository.save(newCategory);
+
+      return newCategory;
+    } catch (error) {
+      this.logger.error(error);
+
+      throw new InternalServerErrorException('Unexpected error');
+    }
+
   }
 
   findAll(): Promise<Category[]> {
     return this.categoryRepository.find();
   }
 
-  findOne(id: number): Promise<Category> {
-    return this.categoryRepository.findOneBy({ id });
+  async findOne(id: number): Promise<Category> {
+    return await this.categoryRepository.findOneBy({ id });
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    this.logger.debug({
+      id: +id,
+      ...updateCategoryDto
+    });
+
+    const category = await this.categoryRepository.preload({
+      id: +id,
+      ...updateCategoryDto
+    });
+
+    this.logger.debug(category);
+
+    if (!category)
+      throw new NotFoundException(`Category with id ${id} not found`);
+
+    try {
+      await this.categoryRepository.save(category);
+
+      return category;
+    } catch (error) {
+      this.logger.error(error);
+
+      throw new InternalServerErrorException('Unexpected error');
+    }
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    const category = await this.categoryRepository.findOneBy({ id });
+
+    if (!category)
+      throw new NotFoundException(`Category with id ${id} not found`);
+
+    const result = await this.categoryRepository.delete(category);
+
+    return result.affected;
   }
 }
