@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Location } from "src/locations/entities/location.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('events')
 export class Event {
@@ -9,11 +10,13 @@ export class Event {
     @Column({ name: 'name' })
     name: string;
 
-    @Column({ name: 'name' })
+    @Column({ name: 'description' })
     description: string;
 
-    @Column({ name: 'location_id' }) 
-    // TODO: FK
+    @Column({ name: 'locationId', select: false })
     locationId: number;
+
+    @ManyToOne(() => Location, (location) => location.events, { eager: true, })
+    location: Location
 
 }
