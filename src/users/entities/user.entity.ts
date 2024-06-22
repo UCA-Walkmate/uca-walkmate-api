@@ -16,7 +16,9 @@ export class User {
     @Column({ name: 'password' })
     password: number;
 
-    // @Column({ name: 'role_id' })
+    @Column({ name: 'roleId', select: false })
+    roleId: number;
+
     @ManyToOne(() => Role, (role) => role.users, { eager: true })
     role: Role;
 
