@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "src/roles/entities/role.entity";
+import { Subject } from "src/subjects/entities/subject.entity";
 
 @Entity('users')
 export class User {
@@ -22,4 +23,5 @@ export class User {
     @ManyToOne(() => Role, (role) => role.users, { eager: true })
     role: Role;
 
+    subjects: Subject[];
 }
