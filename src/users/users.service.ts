@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -7,6 +7,8 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger('UsersServices');
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -20,15 +22,39 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  findOne(id: number): Promise<User> {
-    return this.userRepository.findOneBy({ id });
+  async findOne(id: number): Promise<User> {
+    return await this.userRepository.findOneBy({ id });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.preload({
+      id: +id,
+      ...updateUserDto
+    });
+
+    if (!user)
+      throw new NotFoundException(`User with id ${id} not found`);
+
+    try {
+      await this.userRepository.save(user);
+
+      return user;
+    } catch (error) {
+      this.logger.error(error);
+
+      throw new InternalServerErrorException('Unexpected error');
+    }
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user)
+      throw new NotFoundException(`User with id ${id} not found`);
+
+    const result = await this.userRepository.delete(user);
+
+    return result.affected;
   }
 }
