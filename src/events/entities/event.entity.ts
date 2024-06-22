@@ -13,6 +13,9 @@ export class Event {
     @Column({ name: 'description' })
     description: string;
 
+    @Column({ name: 'date' })
+    date: Date;
+
     @Column({ name: 'locationId', select: false })
     locationId: number;
 

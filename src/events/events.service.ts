@@ -1,34 +1,70 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entities/event.entity';
+import { log } from 'console';
 
 @Injectable()
 export class EventsService {
+  private readonly logger = new Logger('CategoriesService');
+
   constructor(
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
   ) { }
 
-  create(createEventDto: CreateEventDto) {
-    return 'This action adds a new event';
+  async create(createEventDto: CreateEventDto) {
+    const { name, description, date, locationId } = createEventDto;
+
+    try {
+      const newEvent = this.eventRepository.create({ name, description, date, locationId });
+      await this.eventRepository.save(newEvent);
+
+      return newEvent;
+    } catch (error) {
+      this.logger.error(error);
+
+      throw new InternalServerErrorException('Unexpected error');
+    }
+
   }
 
   findAll(): Promise<Event[]> {
     return this.eventRepository.find();
   }
 
-  findOne(id: number): Promise<Event> {
-    return this.eventRepository.findOneBy({ id });
+  async findOne(id: number): Promise<Event> {
+    return await this.eventRepository.findOneBy({ id });
   }
 
-  update(id: number, updateEventDto: UpdateEventDto) {
-    return `This action updates a #${id} event`;
+  async update(id: number, updateEventDto: UpdateEventDto) {
+    const event = await this.eventRepository.preload({
+      id: +id,
+      ...updateEventDto
+    });
+
+    try {
+      await this.eventRepository.save(event);
+
+      return event;
+    } catch (error) {
+      this.logger.error(error);
+
+      throw new InternalServerErrorException('Unexpected error');
+    }
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} event`;
+  async remove(id: number) {
+    const event = await this.eventRepository.findOneBy({ id });
+  
+    if (!event)
+      throw new NotFoundException(`Event with id ${id} not found`);
+
+    const result = await this.eventRepository.delete(event);
+
+    return result.affected;
   }
 }
