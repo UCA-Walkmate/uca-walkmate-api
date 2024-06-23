@@ -3,14 +3,15 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 // ** Module Imports
-import { DatabaseModule } from './database/database.module';
-import { SubjectsModule } from './subjects/subjects.module';
-import { LocationsModule } from './locations/locations.module';
-import { UsersModule } from './users/users.module';
-import { RolesModule } from './roles/roles.module';
-import { CategoriesModule } from './categories/categories.module';
 import { BuildingsModule } from './buildings/buildings.module';
+import { CategoriesModule } from './categories/categories.module';
+import { DatabaseModule } from './database/database.module';
 import { EventsModule } from './events/events.module';
+import { LocationsModule } from './locations/locations.module';
+import { RolesModule } from './roles/roles.module';
+import { SubjectsModule } from './subjects/subjects.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { EventsModule } from './events/events.module';
     CategoriesModule,
     BuildingsModule,
     EventsModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
