@@ -9,5 +9,6 @@ export const getTypeOrmConfig = (configService: ConfigService) : TypeOrmModuleOp
     password: configService.get('POSTGRES_PASS'),
     database: configService.get('POSTGRES_DB'),
     entities: [__dirname + '/../**/*.entity{.ts,.js}',],
+    ssl: true,
     synchronize: false,
 });
