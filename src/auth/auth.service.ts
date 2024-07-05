@@ -22,6 +22,8 @@ export class AuthService {
 
         if (user && isMatch) {
             const { password, ...result } = user;
+            console.log(result);
+            
             return result;
         }
 
@@ -29,9 +31,19 @@ export class AuthService {
     }
 
     async login(user: any) {
-        const payload = { email: user.email, sub: user.id, role: user.role };
+        const payload = { 
+            id: user.id, 
+            name: user.name, 
+            email: user.email, 
+            role: user.role, 
+            sub: user.id, 
+        };
 
         return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
             token: this.jwtService.sign(payload),
         };
     }
