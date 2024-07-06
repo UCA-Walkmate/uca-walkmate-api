@@ -6,7 +6,7 @@ import { DeleteResponseInterceptor } from './common/interceptors/delete-response
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('uca-walkmate/api');
+  app.setGlobalPrefix('api');
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(
