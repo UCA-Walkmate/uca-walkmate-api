@@ -24,6 +24,11 @@ export class SubjectsController {
     return this.subjectsService.findOne(params.id);
   }
 
+  @Get('user/:id')
+  findByUserId(@Param() params: FindOneParams) {
+    return this.subjectsService.findByUserId(params.id);
+  }
+
   @Patch(':id')
   update(@Param() params: FindOneParams, @Body() updateSubjectDto: UpdateSubjectDto) {
     return this.subjectsService.update(params.id, updateSubjectDto);

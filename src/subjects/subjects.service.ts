@@ -54,6 +54,14 @@ export class SubjectsService {
     return await this.subjectRepository.findOneBy({ id });
   }
 
+  async findByUserId(userId: number): Promise<Subject[]> {
+    return await this.subjectRepository.find({ 
+      where: { userId },
+      relations: ['location'],
+      select: ['id', 'name', 'location']
+    });
+  }
+
   async update(id: number, updateSubjectDto: UpdateSubjectDto) {
     const subject = await this.subjectRepository.preload({
       id: +id,
