@@ -17,6 +17,12 @@ export class Subject {
     @Column({ name: 'locationId' })
     locationId: number;
 
+    @Column({name: 'schedule'})
+    schedule: string;
+    
+    @Column({name: 'image'})
+    image: number;
+
     @ManyToOne(() => User, (user) => user.subjects)
     user: User;
     

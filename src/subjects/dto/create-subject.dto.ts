@@ -8,8 +8,16 @@ export class CreateSubjectDto {
     name: string;
 
     @IsNumber()
-    // @IsNotEmpty({ message: 'User ID must not be empty' })
+    @IsNotEmpty({ message: 'User ID must not be empty' })
     userId: number;
+
+    @IsNotEmpty({ message: 'Schedule must not be empty' })
+    @IsString({ message: 'Schedule must be a string' })
+    schedule: string;
+    
+    @IsNumber()
+    @IsNotEmpty({ message: 'Image id must not be empty' })
+    image: number;
 
     @IsNumber()
     @IsNotEmpty({ message: 'Location ID must not be empty' })
