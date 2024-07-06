@@ -17,15 +17,18 @@ export class Subject {
     @Column({ name: 'locationId' })
     locationId: number;
 
-    @Column({name: 'schedule'})
+    @Column({ name: 'schedule' })
     schedule: string;
-    
-    @Column({name: 'image'})
+
+    @Column({ name: 'image' })
     image: number;
+
+    @Column({ name: 'status' })
+    status: string;
 
     @ManyToOne(() => User, (user) => user.subjects)
     user: User;
-    
+
     @ManyToOne(() => Location, (location) => location.users)
     location: Location;
 

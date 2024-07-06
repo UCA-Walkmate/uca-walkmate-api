@@ -19,6 +19,10 @@ export class CreateSubjectDto {
     @IsNotEmpty({ message: 'Image id must not be empty' })
     image: number;
 
+    @IsNotEmpty({ message: 'Status must not be empty' })
+    @IsString({ message: 'Status must be a string' })
+    status: string;
+
     @IsNumber()
     @IsNotEmpty({ message: 'Location ID must not be empty' })
     locationId: number;
