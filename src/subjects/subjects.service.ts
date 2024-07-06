@@ -23,7 +23,7 @@ export class SubjectsService {
   ) { }
 
   async create(createSubjectDto: CreateSubjectDto) {
-    const { name, userId, image, schedule, locationId } = createSubjectDto;
+    const { name, userId, image, schedule, status, locationId } = createSubjectDto;
 
     const userExists = await this.userRepository.findOne({ where: { id: userId } });
     const locationExists = await this.locationRepository.findOne({ where: { id: locationId } });
@@ -35,7 +35,7 @@ export class SubjectsService {
       throw new NotFoundException(`Location with id ${locationId} not found`);
 
     try {
-      const newSubject = this.subjectRepository.create({ name, userId, schedule, image, locationId });
+      const newSubject = this.subjectRepository.create({ name, userId, schedule, image, status, locationId });
       await this.subjectRepository.save(newSubject);
 
       return newSubject;
@@ -58,7 +58,7 @@ export class SubjectsService {
     return await this.subjectRepository.find({
       where: { userId },
       relations: ['location'],
-      select: ['id', 'name', 'schedule', 'image', 'location']
+      select: ['id', 'name', 'schedule', 'image', 'status', 'location']
     });
   }
 
