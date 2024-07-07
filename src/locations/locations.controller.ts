@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { Location } from './entities/location.entity';
 import { LocationsService } from './locations.service';
 import { FindOneParams } from 'src/common/pipes/validation.pipe';
@@ -12,9 +12,14 @@ export class LocationsController {
     return this.locationsService.findAll();
   }
 
-  @Get(':id')
+  @Get('/find/:id')
   findOne(@Param() params: FindOneParams): Promise<Location> {
     return this.locationsService.findOne(params.id);
+  }
+
+  @Get('search')
+  findBySlug(@Query('fragment') query): Promise<Location[]> {
+    return this.locationsService.findByFragment(query);
   }
 
 }
