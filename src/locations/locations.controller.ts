@@ -18,6 +18,7 @@ export class LocationsController {
     return this.locationsService.findOne(params.id);
   }
   
+  @SkipAuth()
   @Get('/name/:name')
   findOneByName(@Param('name') name : string): Promise<Location> {
     return this.locationsService.findOneByName(name);
