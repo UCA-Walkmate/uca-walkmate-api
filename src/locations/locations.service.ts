@@ -25,7 +25,10 @@ export class LocationsService {
         name: ILike(`%${query}%`) 
       }
     });
+  }
 
+  findOneByName(name: string): Promise<Location> {
+    return this.locationRepository.findOneBy({ name });
   }
 
 }
